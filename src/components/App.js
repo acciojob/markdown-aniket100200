@@ -1,27 +1,32 @@
-import React, { useEffect, useState } from 'react';
-import Left from './Left';
-import Right from './Right';
-import Loading from './Loading'; // Assuming you have a Loading component
+import React, { useState, useEffect } from 'react';
+import MarkdownEditor from './MarkdownEditor';
+import MarkdownPreview from './MarkdownPreview';
+import "../styles/App.css"
 
 const App = () => {
-  const [text, setText] = useState("");
-  const [render, setRender] = useState(text);
-  const [loading, setLoading] = useState(false);
+  const [markdown, setMarkdown] = useState('');
+  const [html, setHtml] = useState('');
 
   useEffect(() => {
-    setLoading(true); // Start loading
-    setTimeout(() => {  // Simulate an asynchronous task
-      setRender(text);
-      setLoading(false); // End loading after setting the text
-    }, 50); // Delay for demonstration purposes
-  }, [text]);
+    // Simple markdown to HTML conversion
+    const convertedHtml = markdown
+      .replace(/^# (.*$)/gim, '<h1>$1</h1>') // Headers
+      .replace(/^## (.*$)/gim, '<h2>$1</h2>')
+      .replace(/^### (.*$)/gim, '<h3>$1</h3>')
+      .replace(/\*\*(.*)\*\*/gim, '<strong>$1</strong>') // Bold
+      .replace(/\*(.*)\*/gim, '<em>$1</em>') // Italics
+      .replace(/\n/gim, '<br/>') // Line breaks
+      .replace(/\n\n/gim, '<p></p>'); // Paragraphs
+    
+    setHtml(convertedHtml);
+  }, [markdown]);
 
   return (
-    <div className='app' style={{ display: "grid", gridTemplateColumns: "1fr 1fr", margin: "10px 5px", padding: "20px", height: "90vh" }}>
-      <Left text={text} setText={setText} />
-      {loading ? <Loading /> : <Right text={render} />}
+    <div className="app">
+      <MarkdownEditor markdown={markdown} setMarkdown={setMarkdown} />
+      <MarkdownPreview html={html} />
     </div>
   );
-}
+};
 
 export default App;
