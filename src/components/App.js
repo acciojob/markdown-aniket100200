@@ -13,7 +13,7 @@ const App = () => {
     setTimeout(() => {  // Simulate an asynchronous task
       setRender(text);
       setLoading(false); // End loading after setting the text
-    }, 500); // Delay for demonstration purposes
+    }, 50); // Delay for demonstration purposes
   }, [text]);
 
   return (
